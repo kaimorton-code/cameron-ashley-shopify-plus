@@ -100,6 +100,22 @@
       position: absolute; top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, var(--green), transparent);
     }
+    /* ── TOGGLE ── */
+    .price-toggle {
+      display: flex; align-items: center; gap: 0;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 100px; padding: 4px; margin-bottom: 32px;
+    }
+    .toggle-btn {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 8px 22px; border-radius: 100px; border: none; cursor: pointer;
+      background: transparent; color: var(--text-muted);
+      transition: background 0.2s, color 0.2s;
+    }
+    .toggle-btn.active {
+      background: var(--green); color: #080c10;
+    }
+
     .hero-price-term {
       font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--green); margin-bottom: 4px;
@@ -109,8 +125,15 @@
       font-weight: 900; letter-spacing: -0.04em; line-height: 1;
       background: linear-gradient(135deg, #ffffff 0%, var(--green) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      transition: opacity 0.2s;
     }
     .hero-price-unit { font-size: 16px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; }
+    .hero-price-sublabel {
+      font-size: 13px; font-weight: 600; color: var(--green);
+      background: var(--green-dim); border: 1px solid var(--green-border);
+      border-radius: 8px; padding: 8px 16px; margin-bottom: 8px;
+      text-align: center;
+    }
     .hero-price-pills {
       display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px;
     }
@@ -320,9 +343,14 @@
       A flat-fee structure built around Cameron Ashley's trajectory — so your platform cost never grows with your B2B revenue.
     </p>
     <div class="hero-price-card">
-      <div class="hero-price-term">Annual Flat Fee · 3-Year Term</div>
-      <div class="hero-price-num">$239,400</div>
-      <div class="hero-price-unit">USD per year · billed monthly</div>
+      <div class="price-toggle">
+        <button class="toggle-btn active" id="btn-annual" onclick="setView('annual')">Annual</button>
+        <button class="toggle-btn" id="btn-monthly" onclick="setView('monthly')">Monthly</button>
+      </div>
+      <div class="hero-price-term" id="price-term">Annual Flat Fee · 3-Year Term</div>
+      <div class="hero-price-num" id="price-num">$239,400</div>
+      <div class="hero-price-unit" id="price-unit">USD per year</div>
+      <div class="hero-price-sublabel" id="price-sublabel">Billed monthly — no payment upfront</div>
       <div class="hero-price-pills">
         <span class="pill pill-green">Unlimited B2B GMV</span>
         <span class="pill">Fixed Monthly Payments</span>
@@ -613,6 +641,33 @@
   </footer>
 
   <script>
+    // Price toggle
+    function setView(view) {
+      const num = document.getElementById('price-num');
+      const unit = document.getElementById('price-unit');
+      const term = document.getElementById('price-term');
+      const sublabel = document.getElementById('price-sublabel');
+
+      num.style.opacity = '0';
+      setTimeout(() => {
+        if (view === 'annual') {
+          num.textContent = '$239,400';
+          unit.textContent = 'USD per year';
+          term.textContent = 'Annual Flat Fee · 3-Year Term';
+          sublabel.textContent = 'Billed monthly — no payment upfront';
+        } else {
+          num.textContent = '$19,950';
+          unit.textContent = 'USD per month';
+          term.textContent = 'Monthly Flat Fee · 3-Year Term';
+          sublabel.textContent = 'Same every month for 3 years — no upfront payment, ever';
+        }
+        num.style.opacity = '1';
+      }, 150);
+
+      document.getElementById('btn-annual').classList.toggle('active', view === 'annual');
+      document.getElementById('btn-monthly').classList.toggle('active', view === 'monthly');
+    }
+
     // Scroll fade-in
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
