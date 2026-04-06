@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cameron Ashley × Shopify Plus — Custom Pricing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #00d27a;
+      --green-dark: #00a86b;
+      --green-dim: rgba(0, 210, 122, 0.1);
+      --green-border: rgba(0, 210, 122, 0.28);
+      --bg: #080c10;
+      --bg-card: #0f1520;
+      --bg-card-hover: #161e2e;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8edf5;
+      --text-muted: #6b7a96;
+      --text-mid: #9aa5bc;
+      --gold: #f5c842;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 60px;
+      background: rgba(8, 12, 16, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-left { display: flex; align-items: center; gap: 10px; }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    .nav-label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+    .nav-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      background: var(--green-dim); border: 1px solid var(--green-border);
+      color: var(--green); padding: 4px 10px; border-radius: 100px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 48px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
+      width: 1000px; height: 700px;
+      background: radial-gradient(ellipse, rgba(0,210,122,0.07) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--green-dim); border: 1px solid var(--green-border);
+      border-radius: 100px; padding: 6px 18px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 40px;
+    }
+    .hero h1 {
+      font-size: clamp(48px, 6.5vw, 88px);
+      font-weight: 900; line-height: 1.02; letter-spacing: -0.03em;
+      max-width: 900px; margin-bottom: 28px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--green) 0%, #00ffaa 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--text-mid); max-width: 580px;
+      line-height: 1.75; margin-bottom: 64px;
+    }
+    .hero-price-card {
+      background: var(--bg-card);
+      border: 1px solid var(--green-border);
+      border-radius: 24px;
+      padding: 56px 80px;
+      display: inline-flex; flex-direction: column; align-items: center; gap: 8px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,210,122,0.06);
+    }
+    .hero-price-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+    }
+    .hero-price-term {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 4px;
+    }
+    .hero-price-num {
+      font-size: clamp(56px, 8vw, 88px);
+      font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+      background: linear-gradient(135deg, #ffffff 0%, var(--green) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-price-unit { font-size: 16px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; }
+    .hero-price-pills {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px;
+    }
+    .pill {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 100px;
+      border: 1px solid var(--border); color: var(--text-mid);
+    }
+    .pill-green {
+      background: var(--green-dim); border-color: var(--green-border); color: var(--green);
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+    .rule { border: none; border-top: 1px solid var(--border); }
+    .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 16px;
+    }
+    h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 900; letter-spacing: -0.025em; line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .section-intro {
+      font-size: 17px; color: var(--text-mid); max-width: 600px; line-height: 1.7;
+      margin-bottom: 60px;
+    }
+
+    /* ── WHY FLAT FEE ── */
+    .flatfee-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    }
+    @media (max-width: 768px) { .flatfee-grid { grid-template-columns: 1fr; } }
+
+    .flatfee-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px 36px;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .flatfee-card:hover { border-color: var(--green-border); background: var(--bg-card-hover); }
+    .flatfee-card.highlight {
+      border-color: var(--green-border);
+      background: linear-gradient(135deg, rgba(0,210,122,0.06) 0%, var(--bg-card) 60%);
+    }
+    .flatfee-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--green-dim); border: 1px solid var(--green-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 20px;
+    }
+    .flatfee-card h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
+    .flatfee-card p { font-size: 15px; color: var(--text-mid); line-height: 1.65; }
+    .flatfee-card .stat-callout {
+      margin-top: 16px; padding: 12px 16px;
+      background: rgba(0,210,122,0.08); border-radius: 10px;
+      border-left: 3px solid var(--green);
+      font-size: 13px; color: var(--green); font-weight: 600;
+    }
+    .vs-block {
+      margin-top: 16px; padding: 14px 16px;
+      background: rgba(255,255,255,0.03); border-radius: 10px;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .vs-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
+    .vs-label.old { color: var(--text-muted); }
+    .vs-label.new { color: var(--green); }
+    .vs-value { font-size: 14px; }
+
+    /* ── INCLUDES ── */
+    .includes-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      margin-top: 8px;
+    }
+    @media (max-width: 900px) { .includes-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .includes-grid { grid-template-columns: 1fr; } }
+
+    .include-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 20px; border-radius: 12px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      font-size: 14px; font-weight: 500;
+      transition: border-color 0.2s;
+    }
+    .include-item:hover { border-color: var(--green-border); }
+    .check { color: var(--green); font-size: 16px; flex-shrink: 0; }
+
+    /* ── PAYMENTS ── */
+    .payments-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    }
+    @media (max-width: 768px) { .payments-wrap { grid-template-columns: 1fr; } }
+
+    .rate-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px; overflow: hidden;
+    }
+    .rate-card-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 24px;
+    }
+    .rate-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .rate-row:last-child { border-bottom: none; }
+    .rate-label { font-size: 13px; color: var(--text-mid); }
+    .rate-sublabel { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .rate-value { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: var(--green); text-align: right; }
+    .rate-type-badge {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 3px 10px; border-radius: 100px; margin-bottom: 18px;
+    }
+    .badge-standard { background: rgba(255,255,255,0.06); color: var(--text-mid); border: 1px solid var(--border); }
+    .badge-premium { background: rgba(245,200,66,0.1); color: var(--gold); border: 1px solid rgba(245,200,66,0.3); }
+
+    /* ── ACH TABLE ── */
+    .ach-table-wrap { overflow-x: auto; margin-top: 8px; }
+    .ach-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14px;
+    }
+    .ach-table thead th {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); padding: 14px 20px; text-align: left;
+      border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02);
+    }
+    .ach-table thead th:not(:first-child) { text-align: center; }
+    .ach-table tbody td {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .ach-table tbody td:not(:first-child) { text-align: center; }
+    .ach-table tbody tr:last-child td { border-bottom: none; }
+    .ach-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+    .ach-rate { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: var(--green); }
+    .ach-order-range {
+      font-size: 14px; font-weight: 600; color: var(--text);
+    }
+    .ach-order-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .ach-fixed { font-size: 14px; font-weight: 600; color: var(--text-mid); }
+    .ach-note {
+      margin-top: 20px; padding: 14px 20px;
+      background: var(--green-dim); border: 1px solid var(--green-border);
+      border-radius: 12px; font-size: 13px; color: var(--text-mid); line-height: 1.6;
+    }
+    .ach-note strong { color: var(--green); }
+
+    /* ── NEXT STEPS ── */
+    .steps-list { display: flex; flex-direction: column; gap: 0; }
+    .step-item {
+      display: flex; align-items: flex-start; gap: 24px;
+      padding: 32px 0; border-bottom: 1px solid var(--border);
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--green-border); background: var(--green-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; color: var(--green);
+    }
+    .step-content h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .step-content p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-left { font-size: 13px; color: var(--text-muted); }
+    .footer-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+    }
+    .footer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+    /* ── SCROLL FADE-IN ── */
+    .fade-in {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-left">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Cameron Ashley × Shopify Plus</span>
+    </div>
+    <span class="nav-badge">Custom Pricing — Confidential</span>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <div style="width:6px;height:6px;border-radius:50%;background:var(--green);"></div>
+      3-Year Custom Agreement · Shopify Plus
+    </div>
+    <h1>One Price.<br><em>Unlimited Growth.</em></h1>
+    <p class="hero-sub">
+      A flat-fee structure built around Cameron Ashley's trajectory — so your platform cost never grows with your B2B revenue.
+    </p>
+    <div class="hero-price-card">
+      <div class="hero-price-term">Annual Flat Fee · 3-Year Term</div>
+      <div class="hero-price-num">$239,400</div>
+      <div class="hero-price-unit">USD per year · billed monthly</div>
+      <div class="hero-price-pills">
+        <span class="pill pill-green">Unlimited B2B GMV</span>
+        <span class="pill">Fixed Monthly Payments</span>
+        <span class="pill">Shopify Payments Intent</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- WHY FLAT FEE -->
+  <section class="section fade-in">
+    <div class="eyebrow">Why This Structure</div>
+    <h2>Built for your <em style="font-style:normal;color:var(--green);">30→50%</em> digital adoption goal</h2>
+    <p class="section-intro">
+      Standard Shopify Plus pricing is a revenue share on B2B GMV. Cameron Ashley's custom deal replaces that entirely — locking in a predictable cost regardless of how much B2B revenue you process.
+    </p>
+    <div class="flatfee-grid">
+
+      <div class="flatfee-card highlight">
+        <div class="flatfee-icon">📈</div>
+        <h3>Revenue grows. Your bill doesn't.</h3>
+        <p>As Cameron Ashley scales from 30% to 50%+ digital adoption, your platform fee stays exactly the same — $239,400/year, no surprises.</p>
+        <div class="stat-callout">
+          Typical model: 0.18% rev share on B2B GMV → your cost scales with every dollar of growth. Not here.
+        </div>
+        <div class="vs-block" style="flex-direction:column;gap:6px;">
+          <div><span class="vs-label old">STANDARD MODEL</span><br><span class="vs-value" style="color:var(--text-muted);">0.18% of B2B GMV (variable, grows with you)</span></div>
+          <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:2px;">
+            <span class="vs-label new">YOUR DEAL</span><br><span class="vs-value" style="color:var(--green);font-weight:700;">$239,400/yr flat — unlimited B2B GMV</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flatfee-card">
+        <div class="flatfee-icon">🏗️</div>
+        <h3>Fully hosted. Zero platform overhead.</h3>
+        <p>Shopify Plus is an all-inclusive, fully managed platform. Unlimited bandwidth, web hosting, security, and PCI compliance are bundled — no additional infrastructure costs.</p>
+        <div class="stat-callout">
+          No surprise hosting bills, no infrastructure management, no third-party platform fees.
+        </div>
+      </div>
+
+      <div class="flatfee-card">
+        <div class="flatfee-icon">📊</div>
+        <h3>Predictability for your AR team.</h3>
+        <p>A flat monthly invoice — same amount every month for 3 years. Finance and AR can plan around a known number rather than a variable rev-share that swings with B2B order volume.</p>
+        <div class="stat-callout">
+          $19,950/month, every month, for the full term. Lock it in the budget and move on.
+        </div>
+      </div>
+
+      <div class="flatfee-card">
+        <div class="flatfee-icon">🔧</div>
+        <h3>Reduce dependency on your dev agency.</h3>
+        <p>Shopify Plus's native B2B tools — company accounts, price lists, net terms, draft orders, and more — are built in. You control more without routing every change through a dev agency.</p>
+        <div class="stat-callout">
+          Native tools mean faster changes, lower agency spend, and more internal ownership.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="section fade-in">
+    <div class="eyebrow">What's Included</div>
+    <h2>Everything in Shopify Plus</h2>
+    <p class="section-intro">All features below are bundled in your flat-fee agreement — no add-ons, no tiers.</p>
+    <div class="includes-grid">
+      <div class="include-item"><span class="check">✓</span> Dedicated Launch Support</div>
+      <div class="include-item"><span class="check">✓</span> Dedicated Customer Success Team</div>
+      <div class="include-item"><span class="check">✓</span> 24/7 Tier 1 Plus Support</div>
+      <div class="include-item"><span class="check">✓</span> Shopify Plus Academy</div>
+      <div class="include-item"><span class="check">✓</span> Shopify Sidekick (AI)</div>
+      <div class="include-item"><span class="check">✓</span> Native B2B Functionality</div>
+      <div class="include-item"><span class="check">✓</span> All Plus-Exclusive Features</div>
+      <div class="include-item"><span class="check">✓</span> Unlimited Bandwidth & Web Hosting</div>
+      <div class="include-item"><span class="check">✓</span> Built-in Security & PCI Compliance</div>
+      <div class="include-item"><span class="check">✓</span> Bot Protection</div>
+      <div class="include-item"><span class="check">✓</span> Custom Reports & Analytics</div>
+      <div class="include-item"><span class="check">✓</span> 99.9% Uptime SLA</div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- SHOPIFY PAYMENTS -->
+  <section class="section fade-in">
+    <div class="eyebrow">Shopify Payments</div>
+    <h2>Credit Card Processing Rates</h2>
+    <p class="section-intro">
+      Transparent, predictable processing with bundled fraud tools, network tokenization, and local payment methods — no hidden fees.
+    </p>
+    <div class="payments-wrap">
+
+      <!-- Standard -->
+      <div class="rate-card">
+        <div class="rate-card-title">Online · Credit Card</div>
+        <span class="rate-type-badge badge-standard">Standard · Consumer Cards</span>
+        <div class="rate-row">
+          <div>
+            <div class="rate-label">Domestic</div>
+            <div class="rate-sublabel">US-issued cards</div>
+          </div>
+          <div class="rate-value">2.25% + $0.30</div>
+        </div>
+        <div class="rate-row">
+          <div>
+            <div class="rate-label">International</div>
+            <div class="rate-sublabel">Non-US issued cards</div>
+          </div>
+          <div class="rate-value">3.25% + $0.30</div>
+        </div>
+      </div>
+
+      <!-- Premium -->
+      <div class="rate-card" style="border-color: rgba(245,200,66,0.2);">
+        <div class="rate-card-title">Online · Credit Card</div>
+        <span class="rate-type-badge badge-premium">Premium · Commercial &amp; Amex</span>
+        <div class="rate-row">
+          <div>
+            <div class="rate-label">Domestic</div>
+            <div class="rate-sublabel">Commercial cards &amp; Amex (US)</div>
+          </div>
+          <div class="rate-value" style="color:var(--gold);">2.95% + $0.30</div>
+        </div>
+        <div class="rate-row">
+          <div>
+            <div class="rate-label">International</div>
+            <div class="rate-sublabel">Commercial cards &amp; Amex (non-US)</div>
+          </div>
+          <div class="rate-value" style="color:var(--gold);">3.95% + $0.30</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bundled services callout -->
+    <div style="margin-top:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px 36px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:12px;">Payment Methods</div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:14px;color:var(--text-mid);">
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Shop Pay &amp; Shop Services</span>
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Apple Pay, Google Pay, PayPal</span>
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Local Payment Methods</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:12px;">Additional Services</div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:14px;color:var(--text-mid);">
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Smart Authorization &amp; Retries</span>
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Network Tokenization</span>
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Vaulting (Subs, Pre-orders, B2B)</span>
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Card Account Updater</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:12px;">Fraud &amp; Risk</div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:14px;color:var(--text-mid);">
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Fraud Analysis</span>
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Card Testing Prevention</span>
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Dynamic 3DS (with exemptions)</span>
+          <span><span style="color:var(--green);margin-right:8px;">✓</span>Automated Dispute Resolution</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ACH -->
+  <section class="section fade-in">
+    <div class="eyebrow">Shopify Payments · ACH</div>
+    <h2>ACH Payment Rates</h2>
+    <p class="section-intro">
+      B2B customers pay directly from their bank account at checkout — and can vault details for future orders. Rates scale down as order values increase.
+    </p>
+    <div class="ach-table-wrap">
+      <table class="ach-table">
+        <thead>
+          <tr>
+            <th>Average Order Value</th>
+            <th>Fee Rate</th>
+            <th>Fee Cap</th>
+            <th>NSF Fees</th>
+            <th>Dispute Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="ach-order-range">Under $1,000</div>
+            </td>
+            <td><span class="ach-rate">1.00%</span></td>
+            <td rowspan="4" style="vertical-align:middle;">
+              <div style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+                <span style="font-size:22px;font-weight:800;color:var(--text);">$7.50</span>
+                <span style="font-size:11px;color:var(--text-muted);">per transaction</span>
+              </div>
+            </td>
+            <td rowspan="4" style="vertical-align:middle;">
+              <div style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+                <span style="font-size:22px;font-weight:800;color:var(--text);">$4.00</span>
+              </div>
+            </td>
+            <td rowspan="4" style="vertical-align:middle;">
+              <div style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+                <span style="font-size:22px;font-weight:800;color:var(--text);">$15.00</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ach-order-range">$1,000 – $1,499</div>
+            </td>
+            <td><span class="ach-rate">0.75%</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ach-order-range">$1,500 – $2,499</div>
+            </td>
+            <td><span class="ach-rate">0.50%</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ach-order-range">$2,500+</div>
+              <div class="ach-order-sub">High-value B2B orders</div>
+            </td>
+            <td><span class="ach-rate">0.30%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ach-note">
+      <strong>Note:</strong> ACH is available exclusively to <strong>Shopify Plus merchants in the US</strong> using Shopify Payments, for transfers between US bank accounts.
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- NEXT STEPS -->
+  <section class="section fade-in">
+    <div class="eyebrow">Path Forward</div>
+    <h2>Next Steps to Activate</h2>
+    <p class="section-intro">Four steps to move from agreement to live on Shopify Plus.</p>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Complete Letter of Intent (LOI)</h3>
+          <p>Not legally binding. This form gives our internal team confirmation of the products you're looking to utilize — so we can align resources and prepare the right contract for your setup.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Create a Trial Store</h3>
+          <p>Set up your <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">.myshopify.com</code> URL — this is referenced directly in the contract and is required before signing.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Review Terms of the Agreement</h3>
+          <p>Your team reviews the Shopify Plus terms before countersigning. Legal and finance sign-off happens here.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Sign Agreement &amp; Activate Plus</h3>
+          <p>Once signed, your Plus account is activated, your dedicated launch team is assigned, and onboarding begins.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">Cameron Ashley Building Products × Shopify Plus · Custom Pricing — Confidential</div>
+    <div class="footer-logo">
+      <div class="footer-dot"></div>
+      Shopify Plus
+    </div>
+  </footer>
+
+  <script>
+    // Scroll fade-in
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
